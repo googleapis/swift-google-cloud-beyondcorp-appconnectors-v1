@@ -27,8 +27,8 @@ import GoogleWKT
   @diagnose(DeprecatedDeclaration, as: ignored)
 #endif
 func sample(client: AppConnectorsServiceClient) async throws {
-  let response = try await client.reportStatusPollingUntilDone(
-    request: ReportStatusRequest()
+  let response = try await client.resolveInstanceConfig(
+    request: ResolveInstanceConfigRequest()
       /* set fields using .with { $0... } */
   )
   print("Success: \(response)")

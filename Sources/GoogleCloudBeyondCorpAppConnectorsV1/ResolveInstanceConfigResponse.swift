@@ -17,23 +17,16 @@
 import Foundation
 @_spi(GoogleCloudInternal) public import GoogleWKT
 
-/// ImageConfig defines the control plane images to run.
-public struct ImageConfig: Codable, Equatable, GoogleWKT._AnyPackable,
+/// Response message for BeyondCorp.ResolveInstanceConfig.
+public struct ResolveInstanceConfigResponse: Codable, Equatable, GoogleWKT._AnyPackable,
   Sendable
 {
-  /// The initial image the remote agent will attempt to run for the control
-  /// plane. Format would be a gcr image path, e.g.:
-  /// gcr.io/PROJECT-ID/my-image:tag1
-  public var targetImage: Swift.String = Swift.String()
-
-  /// The stable image that the remote agent will fallback to if the target image
-  /// fails. Format would be a gcr image path, e.g.:
-  /// gcr.io/PROJECT-ID/my-image:tag1
-  public var stableImage: Swift.String = Swift.String()
+  /// AppConnectorInstanceConfig.
+  public var instanceConfig: AppConnectorInstanceConfig? = nil
 
   @_spi(GoogleCloudInternal) public var _unknownFields: GoogleWKT._UnknownFields = .init()
 
-  /// Initialize a new instance of `ImageConfig`.
+  /// Initialize a new instance of `ResolveInstanceConfigResponse`.
   public init() {}
 
   /// Use `config` to return a new instance of this object, with some fields updated.
@@ -41,7 +34,7 @@ public struct ImageConfig: Codable, Equatable, GoogleWKT._AnyPackable,
   /// Commonly used to initialize the value, for example:
   ///
   /// ```
-  /// let value = ImageConfig().with { $0.targetImage = ... }
+  /// let value = ResolveInstanceConfigResponse().with { $0.instanceConfig = ... }
   /// ```
   public func with(_ config: (inout Self) throws -> Swift.Void) rethrows -> Self {
     var copy = self
@@ -55,23 +48,17 @@ public struct ImageConfig: Codable, Equatable, GoogleWKT._AnyPackable,
     init(stringValue: Swift.String) { self.stringValue = stringValue }
     init?(intValue: Swift.Int) { nil }
 
-    static let targetImage = CodingKeys(stringValue: "targetImage")
-    static let stableImage = CodingKeys(stringValue: "stableImage")
+    static let instanceConfig = CodingKeys(stringValue: "instanceConfig")
 
     static let _knownKeys: Set<Swift.String> = [
-      "targetImage",
-      "stableImage",
+      "instanceConfig"
     ]
   }
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .targetImage) {
-      self.targetImage = value
-    }
-    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .stableImage) {
-      self.stableImage = value
-    }
+    self.instanceConfig = try container.decodeIfPresent(
+      AppConnectorInstanceConfig.self, forKey: .instanceConfig)
     for key in container.allKeys where !CodingKeys._knownKeys.contains(key.stringValue) {
       self._unknownFields.json[key.stringValue] = try container.decode(
         GoogleWKT.WKTValue.self, forKey: key)
@@ -80,28 +67,28 @@ public struct ImageConfig: Codable, Equatable, GoogleWKT._AnyPackable,
 
   public func encode(to encoder: any Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(self.targetImage, forKey: .targetImage)
-    try container.encode(self.stableImage, forKey: .stableImage)
+    try container.encodeIfPresent(self.instanceConfig, forKey: .instanceConfig)
     for (key, value) in self._unknownFields.json {
       try container.encode(value, forKey: CodingKeys(stringValue: key))
     }
   }
 
-  /// The type URL for `ImageConfig`: `"type.googleapis.com/google.cloud.beyondcorp.appconnectors.v1.ImageConfig"`.
+  /// The type URL for `ResolveInstanceConfigResponse`: `"type.googleapis.com/google.cloud.beyondcorp.appconnectors.v1.ResolveInstanceConfigResponse"`.
   public static var _anyTypeUrl: Swift.String {
-    return "type.googleapis.com/google.cloud.beyondcorp.appconnectors.v1.ImageConfig"
+    return
+      "type.googleapis.com/google.cloud.beyondcorp.appconnectors.v1.ResolveInstanceConfigResponse"
   }
 
-  /// Initialize an instance of `ImageConfig` by unpacking from a `GoogleWKT.WKTAny`.
+  /// Initialize an instance of `ResolveInstanceConfigResponse` by unpacking from a `GoogleWKT.WKTAny`.
   ///
   /// - Parameter any: The `GoogleWKT.WKTAny` instance to unpack.
-  /// - Throws: An error if the type URL in `any` does not match `"type.googleapis.com/google.cloud.beyondcorp.appconnectors.v1.ImageConfig"`,
+  /// - Throws: An error if the type URL in `any` does not match `"type.googleapis.com/google.cloud.beyondcorp.appconnectors.v1.ResolveInstanceConfigResponse"`,
   ///   or if deserialization fails.
   public init(fromAny any: GoogleWKT.WKTAny) throws {
     self = try GoogleWKT._slowAnyDeserialize(Self.self, from: any)
   }
 
-  /// Packs this `ImageConfig` into a `GoogleWKT.WKTStruct` representation.
+  /// Packs this `ResolveInstanceConfigResponse` into a `GoogleWKT.WKTStruct` representation.
   ///
   /// - Throws: An error if serialization fails.
   public func _pack() throws -> GoogleWKT.WKTStruct {
